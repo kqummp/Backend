@@ -6,12 +6,12 @@
 
 **POST** /api/std/login
 
-#### param
+#### Request
 
 * **uid** int
 * **passwd** string
 
-#### return
+#### Response
 
 * Success
 
