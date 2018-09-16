@@ -44,14 +44,14 @@
 
 **POST** /api/std/passwdreset
 
-#### param
+#### Request
 
 * **uid** int
 * **old_passwd** string
 * **new_passwd** string
 * **new_passwd_r** string
 
-#### return
+#### Response
 
 * Success
 
@@ -102,11 +102,11 @@
 
 **GET** /api/std/query
 
-#### param
+#### Request
 
 * **week** int
 
-#### return
+#### Response
 
 * Success
 
@@ -142,11 +142,11 @@
 
 **GET** /api/std/querybyid
 
-#### param
+#### Request
 
 * **reserve_id** string
 
-#### return
+#### Response
 
 * Success
 
@@ -189,7 +189,7 @@
 
 **POST** /api/std/book
 
-#### param
+#### Request
 
 * **week** int
 * **day** string
@@ -199,7 +199,7 @@
 * **info** string
 * **remark** string
 
-#### return
+#### Response
 
 * Success
 
@@ -233,7 +233,7 @@
 
 **POST** /api/std/modify
 
-#### param
+#### Request
 
 * **reserve_id** string
 * **operation** bool
@@ -246,7 +246,7 @@
   - **info** string
   - **remark** string
 
-#### return
+#### Response
 
 * Success
 
