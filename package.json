@@ -1,0 +1,21 @@
+{
+  "name": "kqummp",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node ./server.js"
+  },
+  "dependencies": {
+    "cluster": "^0.7.7",
+    "connect-redis": "^3.3.3",
+    "cookie-parser": "~1.4.3",
+    "crypto": "^1.0.1",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "file-stream-rotator": "^0.3.1",
+    "http-errors": "~1.6.2",
+    "jade": "~1.11.0",
+    "kqudie": "git+https://github.com/brummp/kqudie.git",
+    "morgan": "~1.9.0"
+  }
+}

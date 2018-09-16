@@ -1,0 +1,6 @@
+
+.config
+.npm
+node_modules
+.node_repl_history
+.bash_history
