@@ -286,7 +286,7 @@
 
 ### Modify
 
-**UPDATE** /std/:uid/book/:id
+**PUT** /std/:uid/book/:id
 
 #### Request
 
@@ -336,15 +336,11 @@
 
 **DELETE** /std/:uid/book/:id
 
-#### Request
-
-* **reserve_id** string
-
 #### Response
 
 * Success
 
-  HTTP 200
+  HTTP 204
 
   ```json
   {
@@ -417,7 +413,7 @@
 
 ### ResetPassword
 
-**POST** /tch/:id/passwd/reset
+**POST** /tch/:uid/passwd/reset
 
 #### Request
 
@@ -479,7 +475,7 @@
 
 ### Query
 
-**GET** /tch/:id/:week
+**GET** /tch/:uid/:week
 
 #### Response
 
@@ -517,7 +513,7 @@
 
 ### List
 
-**GET** /tch/:id/book/list
+**GET** /tch/:uid/book/list
 
 #### Response
 
@@ -566,7 +562,7 @@
 
 ### QueryByReserveId
 
-**GET** /tch/:id/reserve/:id
+**GET** /tch/:uid/reserve/:id
 
 #### Response
 
@@ -603,7 +599,7 @@
 
 ### Accept
 
-**POST** /tch/:id/book/:id/accept
+**PATCH** /tch/:uid/book/:id/accept
 
 #### Response
 
@@ -629,7 +625,7 @@
 
 ### Reject
 
-**POST** /tch/book/:id/reject
+**PATCH** /tch/:uid/book/:id/reject
 
 #### Response
 
@@ -655,7 +651,7 @@
 
 ### Arrange
 
-**POST** /tch/:id/:week/:day/arrange
+**POST** /tch/:uid/:week/:day/arrange
 
 #### Request
 
@@ -665,7 +661,7 @@
 
 * Success
 
-  HTTP 200
+  HTTP 201
 
   ```json
   {
@@ -685,7 +681,7 @@
 
 * Unacceptable 
 
-  HTTP 422
+  HTTP 409
 
   ```json
   {
