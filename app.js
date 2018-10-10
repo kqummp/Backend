@@ -5,7 +5,6 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var FileStreamRotator = require('file-stream-rotator');
 var fs = require('fs');
-var fileUpload = require('express-fileupload');
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 
@@ -34,11 +33,6 @@ var accessLogStream = FileStreamRotator.getStream({
   verbose: false
 });
 
-// setup the filemanager
-app.use(fileUpload({
-  limits: { fileSize: init_config.upload_fileSize_limit },
-}));
-
 // setup the logger
 app.use(logger('combined', {stream: accessLogStream}));
 app.use(logger('dev'));
@@ -60,8 +54,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api/std', stdRouter);
-app.use('/api/tch', tchRouter);
+app.use('/std', stdRouter);
+app.use('/tch', tchRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
