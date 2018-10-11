@@ -19,7 +19,8 @@
 
   ```json
   {
-    "message": "OK"
+    "message": "OK",
+    "uid": 2017220301024
   }
   ```
 
@@ -68,7 +69,7 @@
 * Uid or Password error
 
   HTTP 422
-  
+
   ```json
   {
     "message": "UID_OR_PASSWORD_ERROR"
@@ -387,7 +388,8 @@
 
   ```json
   {
-    "message": "OK"
+    "message": "OK",
+    "uid": 1000000
   }
   ```
 
@@ -436,7 +438,7 @@
 * Uid or Password error
 
   HTTP 422
-  
+
   ```json
   {
     "message": "UID_OR_PASSWORD_ERROR"
@@ -679,7 +681,7 @@
   }
   ```
 
-* Unacceptable 
+* Unacceptable
 
   HTTP 409
 

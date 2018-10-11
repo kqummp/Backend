@@ -3,7 +3,7 @@ const router = express.Router();
 
 const stdmgr = require('stdmgr');
 const message = require('./message');
-const err_log = require('./err_log');
+const logger = require('./logger');
 
 // handle uncaughtExpection
 const Layer = require('express/lib/router/layer');
@@ -31,7 +31,8 @@ Object.defineProperty(Layer.prototype, 'handle', {
  */
 
 router.post('/login', async function (req, res) {
-  if (req.session.signin === true && typeof req.session.uid !== "undefined") {
+  if (req.session.signin === true && typeof req.session.uid !== "undefined" &&
+    typeof req.session.role !== "undefined") {
     res.status(302).redirect('/');
     return;
   }
@@ -42,7 +43,7 @@ router.post('/login', async function (req, res) {
   try {
     succ_message = await stdmgr.Login(uid, passwd);
   } catch (err) {
-    err_log.logger("/std/login", err, req);
+    logger.logger("/std/login", req, err);
 
     let err_message = {
       "message": err.message
@@ -61,13 +62,29 @@ router.post('/login', async function (req, res) {
     return;
   }
 
+  logger.logger("/std/login", req);
   let send_data = {
-    "message": succ_message
+    "message": succ_message,
+    "uid": uid
   };
   req.session.signin = true;
   req.session.uid = uid;
   req.session.role = "std";
   res.status(200).jsonp(send_data);
+});
+
+router.post('/logout', function (req, res) {
+  try {
+    req.session.destroy();
+  } catch (err) {
+    logger.logger("/std/logout", req, err);
+
+    res.sendStatus(500);
+    return;
+  }
+  
+  logger.logger("/std/logout", req);
+  res.sendStatus(200);
 });
 
 module.exports = router;

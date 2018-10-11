@@ -3,7 +3,7 @@ const router = express.Router();
 
 const tchmgr = require('tchmgr');
 const message = require('./message');
-const err_log = require('./err_log');
+const logger = require('./logger');
 
 /**
  ** Login router
@@ -25,7 +25,7 @@ router.post('/login', async function (req, res) {
   try {
     succ_message = await tchmgr.Login(uid, passwd);
   } catch (err) {
-    err_log.logger("/tch/login", err, req);
+    logger.logger("/tch/login", req, err);
 
     let err_message = {
       "message": err.message
@@ -44,13 +44,29 @@ router.post('/login', async function (req, res) {
     return;
   }
 
+  logger.logger("/tch/login", req);
   let send_data = {
-    "message": succ_message
+    "message": succ_message,
+    "uid": uid
   };
   req.session.signin = true;
   req.session.uid = uid;
   req.session.role = "tch";
   res.status(200).jsonp(send_data);
+});
+
+router.post('/logout', function (req, res) {
+  try {
+    req.session.destroy();
+  } catch (err) {
+    logger.logger("/std/logout", req, err);
+
+    res.sendStatus(500);
+    return;
+  }
+
+  logger.logger("/std/logout", req);
+  res.sendStatus(200);
 });
 
 module.exports = router;
