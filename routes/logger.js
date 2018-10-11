@@ -77,7 +77,7 @@ logger.fileSave = function (router, req, err) {
       }
       console.log('Request Failure Recorded');
     });
-    return;
+
   } else {
     let data = `Success Request ${router} Router: \nRequest Time: ${date.toLocaleString()}\nRequest Info: \n${req.method} ${req.url}\nBody: \n${JSON.stringify(req.body)}\nQuery: \n${JSON.stringify(req.query)}\nRequest Headers: \n${JSON.stringify(req.headers)}\nRemote IP: ${req.ip}\n\n`;
     fs.appendFile(`${reqlogDirectory}/log-${moment().format(dateformat)}.log`, data, function (err) {
@@ -86,6 +86,6 @@ logger.fileSave = function (router, req, err) {
       }
       console.log('Success Request Recorded');
     });
-    return;
+
   }
 }

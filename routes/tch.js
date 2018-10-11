@@ -55,6 +55,12 @@ router.post('/login', async function (req, res) {
   res.status(200).jsonp(send_data);
 });
 
+/**
+ ** Logout router
+ ** POST /logout
+ **
+ */
+
 router.post('/logout', function (req, res) {
   try {
     req.session.destroy();
@@ -69,4 +75,36 @@ router.post('/logout', function (req, res) {
   res.sendStatus(200);
 });
 
+/**
+ ** Query router
+ ** GET /:uid/:week
+ **
+ */
+
+router.get('/:uid/:week', async function (req, res) {
+  let uid = parseInt(req.params['uid']),
+      week = parseInt(req.params['week']);
+
+  let succ_data;
+  try {
+    succ_data = await tchmgr.Query(week);
+  } catch (err) {
+    logger.logger("/tch/" + uid + "/" + week, req, err);
+
+    let err_message = {
+      "message": err.message
+    };
+    if (err.message === message.invalid_field) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    res.status(400).jsonp(err_message);
+    return;
+  }
+
+  logger.logger("/tch/" + uid + "/" + week, req);
+
+  res.status(200).jsonp(succ_data);
+});
 module.exports = router;
