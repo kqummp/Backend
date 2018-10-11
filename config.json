@@ -1,6 +1,6 @@
 {
   "directory" : "/root/",
-  "upload_directory" : "/root/public/upload/",
+  "listen": "0.0.0.0",
   "upload_fileSize_limit" : 20971520 ,
   "port" : 80,
   "redis_host" : "redis",

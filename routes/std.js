@@ -3,6 +3,7 @@ const router = express.Router();
 
 const stdmgr = require('stdmgr');
 const message = require('./message');
+const err_log = require('./err_log');
 
 // handle uncaughtExpection
 const Layer = require('express/lib/router/layer');
@@ -41,12 +42,7 @@ router.post('/login', async function (req, res) {
   try {
     succ_message = await stdmgr.Login(uid, passwd);
   } catch (err) {
-    console.error("Error in /std/login Router: ")
-    console.error("[Error] " + err.message);
-    console.error("Request Info: ");
-    console.error(req.body);
-    console.error(req.headers);
-    console.error();
+    err_log.logger("/std/login", err, req);
 
     let err_message = {
       "message": err.message
@@ -60,6 +56,9 @@ router.post('/login', async function (req, res) {
       res.status(422).jsonp(err_message);
       return;
     }
+
+    res.status(400).jsonp(err_message);
+    return;
   }
 
   let send_data = {
@@ -67,6 +66,7 @@ router.post('/login', async function (req, res) {
   };
   req.session.signin = true;
   req.session.uid = uid;
+  req.session.role = "std";
   res.status(200).jsonp(send_data);
 });
 
