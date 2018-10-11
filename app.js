@@ -54,8 +54,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/std', stdRouter);
-app.use('/tch', tchRouter);
+app.use('/api/std', stdRouter);
+app.use('/api/tch', tchRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
