@@ -14,11 +14,6 @@ const reqlogDirectory = path.join(__dirname, '../log/reqlog');
 const FileStreamRotator = require('file-stream-rotator');
 const moment = require('moment');
 
-
-// ensure log directory exists
-fs.existsSync(errlogDirectory) || fs.mkdirSync(errlogDirectory);
-fs.existsSync(reqlogDirectory) || fs.mkdirSync(reqlogDirectory);
-
 // create a rotating write stream
 var errorLogStream = FileStreamRotator.getStream({
   date_format: 'YYYYMMDD',
