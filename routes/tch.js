@@ -313,4 +313,81 @@ router.patch('/:uid/reserve/:id/reject', async function (req, res) {
   res.status(200).jsonp(succ_message);
 });
 
+/**
+ ** Arrange router
+ ** POST /:uid/:week/:day/arrange
+ **
+ */
+
+router.post('/:uid/:week/:day/arrange', async function (req, res) {
+  let uid = parseInt(req.params['uid']),
+      week = parseInt(req.params['week']),
+      day = parseInt(req.params['day']),
+      available = req.body.available,
+      session_user = req.session.uid;
+
+  let data = {
+    "week": week,
+    "day": day,
+    "available": available
+  }
+
+  let succ_message;
+  try {
+    succ_message = await tchmgr.Arrange(session_user, uid, data);
+  } catch (err) {
+    logger.logger("/tch/" + uid + "/" + week + "/" + day + "/arrange", req, err);
+
+    let err_message = {
+      "message": err.message
+    };
+    if (err.message === message.invalid_field) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.no_login) {
+      res.status(401).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.not_permitted) {
+      res.status(401).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.accepted) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.rejected) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.out_of_range) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.unacceptable) {
+      res.status(409).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.database_error) {
+      res.status(500).jsonp(err_message);
+      return;
+    }
+
+    res.status(400).jsonp(err_message);
+    return;
+  }
+
+  logger.logger("/tch/" + uid + "/" + week + "/" + day + "/arrange", req);
+
+  res.status(200).jsonp(succ_message);
+});
+
 module.exports = router;
