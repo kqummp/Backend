@@ -197,7 +197,7 @@ router.get('/:uid/reserve/:id', async function (req, res) {
 
 /**
  ** Accept router
- ** PATCH /:uid/reserve/:id
+ ** PATCH /:uid/reserve/:id/accept
  **
  */
 
@@ -250,6 +250,65 @@ router.patch('/:uid/reserve/:id/accept', async function (req, res) {
   }
 
   logger.logger("/tch/" + uid + "/reserve/" + reserve_id + "/accept", req);
+
+  res.status(200).jsonp(succ_message);
+});
+
+/**
+ ** Reject router
+ ** PATCH /:uid/reserve/:id/reject
+ **
+ */
+
+router.patch('/:uid/reserve/:id/reject', async function (req, res) {
+  let uid = parseInt(req.params['uid']),
+      reserve_id = req.params['id'],
+      session_user = req.session.uid;
+
+  let succ_message;
+  try {
+    succ_message = await tchmgr.Reject(reserve_id, session_user, uid);
+  } catch (err) {
+    logger.logger("/tch/" + uid + "/reserve/" + reserve_id + "/reject", req, err);
+
+    let err_message = {
+      "message": err.message
+    };
+    if (err.message === message.invalid_field) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.no_login) {
+      res.status(401).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.not_permitted) {
+      res.status(401).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.accepted) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.rejected) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.database_error) {
+      res.status(500).jsonp(err_message);
+      return;
+    }
+
+    res.status(400).jsonp(err_message);
+    return;
+  }
+
+  logger.logger("/tch/" + uid + "/reserve/" + reserve_id + "/reject", req);
 
   res.status(200).jsonp(succ_message);
 });
