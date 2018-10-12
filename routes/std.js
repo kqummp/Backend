@@ -126,4 +126,47 @@ router.get('/:uid/:week', async function (req, res) {
   res.status(200).jsonp(succ_data);
 });
 
+/**
+ ** QueryList router
+ ** GET /:uid/book/list
+ **
+ */
+
+router.get('/:uid/book/list', async function (req, res) {
+  let uid = parseInt(req.params['uid']),
+      session_user = req.session.uid;
+
+  let succ_data;
+  try {
+    succ_data = await stdmgr.QueryList(uid, session_user);
+  } catch (err) {
+    logger.logger("/std/" + uid + "/book/list", req, err);
+
+    let err_message = {
+      "message": err.message
+    };
+    if (err.message === message.invalid_field) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.no_login) {
+      res.status(401).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.not_permitted) {
+      res.status(401).jsonp(err_message);
+      return;
+    }
+
+    res.status(400).jsonp(err_message);
+    return;
+  }
+
+  logger.logger("/std/" + uid + "/book/list", req);
+
+  res.status(200).jsonp(succ_data);
+});
+
 module.exports = router;
