@@ -268,7 +268,7 @@ router.post('/:uid/book', async function (req, res) {
 
   logger.logger("/std/" + uid + "/book", req);
 
-  res.status(200).jsonp(succ_data);
+  res.status(201).jsonp(succ_data);
 });
 
 /**
@@ -338,6 +338,65 @@ router.put('/:uid/reserve/:id', async function (req, res) {
   logger.logger("/std/" + uid + "/reserve/" + id, req);
 
   res.status(200).jsonp(succ_data);
+});
+
+/**
+ ** Modify router
+ ** DELETE /std/:uid/reserve/:id
+ **
+ */
+
+router.delete('/:uid/reserve/:id', async function (req, res) {
+  let uid = parseInt(req.params['uid']),
+      reserve_id = req.params['id'],
+      session_user = req.session.uid;
+
+  let succ_message;
+  try {
+    succ_message = await stdmgr.Modify(data, false, session_user, uid);
+  } catch (err) {
+    logger.logger("/std/" + uid + "/reserve/" + id, req, err);
+
+    let err_message = {
+      "message": err.message
+    };
+    if (err.message === message.invalid_field) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.no_login) {
+      res.status(401).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.not_permitted) {
+      res.status(401).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.not_complete) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.no_reservation) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.database_error) {
+      res.status(500).jsonp(err_message);
+      return;
+    }
+
+    res.status(400).jsonp(err_message);
+    return;
+  }
+
+  logger.logger("/std/" + uid + "/reserve/" + id, req);
+
+  res.status(204).jsonp(succ_message);
 });
 
 module.exports = router;
