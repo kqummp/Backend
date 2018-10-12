@@ -213,4 +213,62 @@ router.get('/:uid/reserve/:id', async function (req, res) {
   res.status(200).jsonp(succ_data);
 });
 
+/**
+ ** Book router
+ ** POST /std/:uid/book
+ **
+ */
+
+router.post('/:uid/book', async function (req, res) {
+  let uid = parseInt(req.params['uid']),
+      session_user = req.session.uid,
+      data = req.body;
+
+  data.week = parseInt(data.week);
+  data.day = parseInt(data.day);
+  data.time = parseInt(data.time);
+  data.teacher = parseInt(data.teacher);
+  let succ_data;
+  try {
+    succ_data = await stdmgr.Book(data, session_user, uid);
+  } catch (err) {
+    logger.logger("/std/" + uid + "/book", req, err);
+
+    let err_message = {
+      "message": err.message
+    };
+    if (err.message === message.invalid_field) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.no_login) {
+      res.status(401).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.not_permitted) {
+      res.status(401).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.not_complete) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.unavailable) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    res.status(400).jsonp(err_message);
+    return;
+  }
+
+  logger.logger("/std/" + uid + "/book", req);
+
+  res.status(200).jsonp(succ_data);
+});
+
 module.exports = router;
