@@ -271,4 +271,73 @@ router.post('/:uid/book', async function (req, res) {
   res.status(200).jsonp(succ_data);
 });
 
+/**
+ ** Modify router
+ ** PUT /std/:uid/reserve/:id
+ **
+ */
+
+router.put('/:uid/reserve/:id', async function (req, res) {
+  let uid = parseInt(req.params['uid']),
+      reserve_id = req.params['id'],
+      session_user = req.session.uid,
+      data = req.body;
+
+  data.week = parseInt(data.week);
+  data.day = parseInt(data.day);
+  data.time = parseInt(data.time);
+  data.teacher = parseInt(data.teacher);
+  let succ_data;
+  try {
+    succ_data = await stdmgr.Modify(data, true, session_user, uid, data);
+  } catch (err) {
+    logger.logger("/std/" + uid + "/reserve/" + id, req, err);
+
+    let err_message = {
+      "message": err.message
+    };
+    if (err.message === message.invalid_field) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.no_login) {
+      res.status(401).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.not_permitted) {
+      res.status(401).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.not_complete) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.no_reservation) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.database_error) {
+      res.status(500).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.unavailable) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    res.status(400).jsonp(err_message);
+    return;
+  }
+
+  logger.logger("/std/" + uid + "/reserve/" + id, req);
+
+  res.status(200).jsonp(succ_data);
+});
+
 module.exports = router;
