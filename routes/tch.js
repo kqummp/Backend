@@ -257,17 +257,19 @@ router.patch('/:uid/reserve/:id/accept', async function (req, res) {
 /**
  ** Reject router
  ** PATCH /:uid/reserve/:id/reject
+ ** Request reject_reason
  **
  */
 
 router.patch('/:uid/reserve/:id/reject', async function (req, res) {
   let uid = parseInt(req.params['uid']),
       reserve_id = req.params['id'],
+      reject_reason = req.body.reject_reason,
       session_user = req.session.uid;
 
   let succ_message;
   try {
-    succ_message = await tchmgr.Reject(reserve_id, session_user, uid);
+    succ_message = await tchmgr.Reject(reserve_id, reject_reason, session_user, uid);
   } catch (err) {
     logger.logger("/tch/" + uid + "/reserve/" + reserve_id + "/reject", req, err);
 
