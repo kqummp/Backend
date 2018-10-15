@@ -128,11 +128,11 @@ router.get('/:uid/:week', async function (req, res) {
 
 /**
  ** QueryList router
- ** GET /:uid/book/list
+ ** GET /:uid/reserve/list
  **
  */
 
-router.get('/:uid/book/list', async function (req, res) {
+router.get('/:uid/reserve/list', async function (req, res) {
   let uid = parseInt(req.params['uid']),
       session_user = req.session.uid;
 
