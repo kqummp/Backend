@@ -289,9 +289,9 @@ router.put('/:uid/reserve/:id', async function (req, res) {
   data.teacher = parseInt(data.teacher);
   let succ_data;
   try {
-    succ_data = await stdmgr.Modify(data, true, session_user, uid, data);
+    succ_data = await stdmgr.Modify(reserve_id, true, session_user, uid, data);
   } catch (err) {
-    logger.logger("/std/" + uid + "/reserve/" + id, req, err);
+    logger.logger("/std/" + uid + "/reserve/" + reserve_id, req, err);
 
     let err_message = {
       "message": err.message
@@ -335,7 +335,7 @@ router.put('/:uid/reserve/:id', async function (req, res) {
     return;
   }
 
-  logger.logger("/std/" + uid + "/reserve/" + id, req);
+  logger.logger("/std/" + uid + "/reserve/" + reserve_id, req);
 
   res.status(200).jsonp(succ_data);
 });
@@ -353,9 +353,9 @@ router.delete('/:uid/reserve/:id', async function (req, res) {
 
   let succ_message;
   try {
-    succ_message = await stdmgr.Modify(data, false, session_user, uid);
+    succ_message = await stdmgr.Modify(reserve_id, false, session_user, uid);
   } catch (err) {
-    logger.logger("/std/" + uid + "/reserve/" + id, req, err);
+    logger.logger("/std/" + uid + "/reserve/" + reserve_id, req, err);
 
     let err_message = {
       "message": err.message
@@ -394,7 +394,7 @@ router.delete('/:uid/reserve/:id', async function (req, res) {
     return;
   }
 
-  logger.logger("/std/" + uid + "/reserve/" + id, req);
+  logger.logger("/std/" + uid + "/reserve/" + reserve_id, req);
 
   res.status(204).jsonp(succ_message);
 });
