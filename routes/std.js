@@ -56,7 +56,6 @@ router.post('/login', async function (req, res) {
     return;
   }
 
-  logger.logger("/std/login", req);
   let send_data = {
     "message": succ_message,
     "uid": uid
@@ -64,16 +63,8 @@ router.post('/login', async function (req, res) {
 
   if (req.session.signin === true && typeof req.session.uid !== "undefined" &&
     typeof req.session.role !== "undefined") {
-    try {
-      req.session.destroy();
-    } catch (err) {
-      res.sendStatus(500);
-      return;
-    }
+    logger.logger("/std/login", req);
 
-    req.session.signin = true;
-    req.session.uid = uid;
-    req.session.role = "std";
     res.status(200).jsonp(send_data);
     return;
   }
@@ -81,6 +72,9 @@ router.post('/login', async function (req, res) {
   req.session.signin = true;
   req.session.uid = uid;
   req.session.role = "std";
+
+  logger.logger("/std/login", req);
+
   res.status(200).jsonp(send_data);
 });
 
