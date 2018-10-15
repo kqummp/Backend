@@ -31,12 +31,6 @@ Object.defineProperty(Layer.prototype, 'handle', {
  */
 
 router.post('/login', async function (req, res) {
-  if (req.session.signin === true && typeof req.session.uid !== "undefined" &&
-    typeof req.session.role !== "undefined") {
-    res.status(302).redirect('/');
-    return;
-  }
-
   let uid = parseInt(req.body.uid),
       passwd = req.body.passwd;
   let succ_message;
@@ -67,6 +61,23 @@ router.post('/login', async function (req, res) {
     "message": succ_message,
     "uid": uid
   };
+
+  if (req.session.signin === true && typeof req.session.uid !== "undefined" &&
+    typeof req.session.role !== "undefined") {
+    try {
+      req.session.destroy();
+    } catch (err) {
+      res.sendStatus(500);
+      return;
+    }
+
+    req.session.signin = true;
+    req.session.uid = uid;
+    req.session.role = "std";
+    res.status(200).jsonp(send_data);
+    return;
+  }
+
   req.session.signin = true;
   req.session.uid = uid;
   req.session.role = "std";
@@ -395,8 +406,12 @@ router.delete('/:uid/reserve/:id', async function (req, res) {
   }
 
   logger.logger("/std/" + uid + "/reserve/" + reserve_id, req);
+  if (succ_message.message !== message.success) {
+    res.sendStatus(500);
+    return;
+  }
 
-  res.status(204).jsonp(succ_message);
+  res.sendStatus(204);
 });
 
 module.exports = router;
