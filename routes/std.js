@@ -79,6 +79,61 @@ router.post('/login', async function (req, res) {
 });
 
 /**
+ ** Passwd Modify router
+ ** POST /:uid/passwd/modify
+ ** Request uid, old_passwd, new_passwd, new_passwd_r
+ **
+ */
+
+router.post('/:uid/passwd/modify', async function (req, res) {
+  let uid = parseInt(req.body.uid),
+      old_passwd = req.body.old_passwd,
+      new_passwd = req.body.new_passwd,
+      new_passwd_r = req.boay.new_passwd_r;
+
+  let succ_message;
+  try {
+    succ_message = await stdmgr.ResetPassword(uid, old_passwd, new_passwd, new_passwd_r);
+  } catch (err) {
+    logger.logger("/std/" + uid + "/passwd/modify", req, err);
+
+    let err_message = {
+      "message": err.message
+    };
+    if (err.message === message.uid_or_password_invalid) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.repeat_not_same) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.not_modified) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.database_error) {
+      res.status(500).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.uid_or_password_error) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    res.status(400).jsonp(err_message);
+    return;
+  }
+
+  logger.logger("/std/" + uid + "/passwd/modify", req);
+  res.status(200).jsonp(succ_message);
+});
+
+/**
  ** Logout router
  ** POST /logout
  **
