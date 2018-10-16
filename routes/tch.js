@@ -5,24 +5,6 @@ const tchmgr = require('tchmgr');
 const message = require('./message');
 const logger = require('./logger');
 
-// handle uncaughtExpection
-const Layer = require('express/lib/router/layer');
-
-Object.defineProperty(Layer.prototype, 'handle', {
-  enumerable: true,
-  get() {
-    return this.__handle;
-  },
-  set(fn) {
-    if (fn.length === 4) {
-      this.__handle = fn;
-    } else {
-      this.__handle = (req, res, next) =>
-        Promise.resolve(fn(req, res, next)).catch(next);
-    }
-  },
-});
-
 /**
  ** Login router
  ** POST /login
