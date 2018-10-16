@@ -129,8 +129,12 @@ router.post('/:uid/passwd/modify', async function (req, res) {
     return;
   }
 
+  let send_data = {
+    "message": succ_message
+  };
+
   logger.logger("/std/" + uid + "/passwd/modify", req);
-  res.status(200).jsonp(succ_message);
+  res.status(200).jsonp(send_data);
 });
 
 /**
@@ -149,8 +153,12 @@ router.post('/logout', function (req, res) {
     return;
   }
 
+  let send_data = {
+    "message": "OK"
+  };
+
   logger.logger("/std/logout", req);
-  res.sendStatus(200);
+  res.status(200).jsonp(send_data);
 });
 
 /**
@@ -454,13 +462,16 @@ router.delete('/:uid/reserve/:id', async function (req, res) {
     return;
   }
 
-  logger.logger("/std/" + uid + "/reserve/" + reserve_id, req);
   if (succ_message.message !== message.success) {
     res.sendStatus(500);
     return;
   }
 
-  res.sendStatus(204);
+  let send_data = {
+    "message": "OK"
+  };
+  logger.logger("/std/" + uid + "/reserve/" + reserve_id, req);
+  res.status(204).jsonp(send_data);
 });
 
 module.exports = router;

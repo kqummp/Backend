@@ -46,7 +46,7 @@
 
 ### ResetPassword
 
-**POST** /std/:uid/passwd/reset
+**POST** /std/:uid/passwd/modify
 
 #### Request
 
@@ -106,6 +106,36 @@
   }
   ```
 
+* Database Error
+
+  HTTP 500
+
+  ```json
+  {
+    "message": "DATABASE_ERROR"
+  }
+  ```
+
+### Logout
+
+**POST** /std/logout
+
+#### Response
+
+* Success
+
+  HTTP 200
+
+  ```json
+  {
+    "message": "OK"
+  }
+  ```
+
+* Unknown Error
+
+  HTTP 500
+
 ### Query
 
 **GET** /std/:uid/:week
@@ -146,7 +176,7 @@
 
 ### List
 
-**GET** /std/:uid/book/list
+**GET** /std/:uid/reserve/list
 
 #### Response
 
@@ -191,6 +221,26 @@
   }
   ```
 
+* Invaild Field
+
+    HTTP 422
+
+    ```json
+    {
+      "message": "INVALID_FIELD"
+    }
+    ```
+
+* No Login
+
+  HTTP 401
+
+  ```json
+  {
+    "message": "NOT_LOGINED_YET"
+  }
+  ```
+
 ### QueryByReserveId
 
 **GET** /std/:uid/reserve/:id
@@ -228,13 +278,23 @@
   }
   ```
 
-* Invalid id
+* No Login
+
+  HTTP 401
+
+  ```json
+  {
+    "message": "NOT_LOGINED_YET"
+  }
+  ```
+
+* Invalid Field
 
   HTTP 422
 
   ```json
   {
-    "message": "INVALID_ID"
+    "message": "INVALID_FIELD"
   }
   ```
 
@@ -251,6 +311,7 @@
 * **reason** string
 * **info** string
 * **remark** string
+* **teacher** int
 
 #### Response
 
@@ -275,6 +336,16 @@
   }
   ```
 
+* No Login
+
+  HTTP 401
+
+  ```json
+  {
+    "message": "NOT_LOGINED_YET"
+  }
+  ```
+
 * Invalid Field
 
   HTTP 422
@@ -285,13 +356,32 @@
   }
   ```
 
+* Permission Denied
+
+  HTTP 401
+
+  ```json
+  {
+    "message": "PERMISSION_DENIED"
+  }
+  ```
+
+* Unavailable
+
+  HTTP 422
+
+  ```json
+  {
+    "message": "TIME_UNAVAILABLE"
+  }
+  ```
+
 ### Modify
 
-**PUT** /std/:uid/book/:id
+**PUT** /std/:uid/reserve/:id
 
 #### Request
 
-* **reserve_id** string
 * **week** int
 * **day** string
 * **time** int
@@ -299,6 +389,7 @@
 * **reason** string
 * **info** string
 * **remark** string
+* **teacher** int
 
 #### Response
 
@@ -333,9 +424,50 @@
   }
   ```
 
+
+* Permission Denied
+
+  HTTP 401
+
+  ```json
+  {
+    "message": "PERMISSION_DENIED"
+  }
+  ```
+
+* Unavailable
+
+  HTTP 422
+
+  ```json
+  {
+    "message": "TIME_UNAVAILABLE"
+  }
+  ```
+
+* No Reservation
+
+  HTTP 422
+
+  ```json
+  {
+    "message": "RESERVATION_NOT_EXIST"
+  }
+  ```
+
+* Database Error
+
+  HTTP 500
+
+  ```json
+  {
+    "message": "DATABASE_ERROR"
+  }
+  ```
+
 ### Modify
 
-**DELETE** /std/:uid/book/:id
+**DELETE** /std/:uid/reserve/:id
 
 #### Response
 
@@ -366,6 +498,37 @@
   ```json
   {
     "message": "INVALID_FIELD"
+  }
+  ```
+
+
+* Permission Denied
+
+  HTTP 401
+
+  ```json
+  {
+    "message": "PERMISSION_DENIED"
+  }
+  ```
+
+* No Reservation
+
+  HTTP 422
+
+  ```json
+  {
+    "message": "RESERVATION_NOT_EXIST"
+  }
+  ```
+
+* Database Error
+
+  HTTP 500
+
+  ```json
+  {
+    "message": "DATABASE_ERROR"
   }
   ```
 
@@ -413,9 +576,29 @@
   }
   ```
 
+### Logout
+
+**POST** /std/logout
+
+#### Response
+
+* Success
+
+  HTTP 200
+
+  ```json
+  {
+    "message": "OK"
+  }
+  ```
+
+* Unknown Error
+
+  HTTP 500
+
 ### ResetPassword
 
-**POST** /tch/:uid/passwd/reset
+**POST** /tch/:uid/passwd/modify
 
 #### Request
 
@@ -475,6 +658,16 @@
   }
   ```
 
+* Database Error
+
+  HTTP 500
+
+  ```json
+  {
+    "message": "DATABASE_ERROR"
+  }
+  ```
+
 ### Query
 
 **GET** /tch/:uid/:week
@@ -515,7 +708,7 @@
 
 ### List
 
-**GET** /tch/:uid/book/list
+**GET** /tch/:uid/reserve/list
 
 #### Response
 
@@ -562,6 +755,16 @@
   }
   ```
 
+* No Login
+
+  HTTP 401
+
+  ```json
+  {
+    "message": "NOT_LOGINED_YET"
+  }
+  ```
+
 ### QueryByReserveId
 
 **GET** /tch/:uid/reserve/:id
@@ -589,19 +792,29 @@
   }
   ```
 
-* Invalid id
+* Invalid Field
 
   HTTP 422
 
   ```json
   {
-    "message": "INVALID_ID"
+    "message": "INVALID_FIELD"
   }
   ```
 
+* No Login
+
+  HTTP 401
+
+  ```json
+  {
+    "message": "NOT_LOGINED_YET"
+  }
+   ```
+
 ### Accept
 
-**PATCH** /tch/:uid/book/:id/accept
+**PATCH** /tch/:uid/reserve/:id/accept
 
 #### Response
 
@@ -615,19 +828,69 @@
   }
   ```
 
-* Invalid id
+* Invalid Field
 
   HTTP 422
 
   ```json
   {
-    "message": "INVALID_ID"
+    "message": "INVALID_FIELD"
+  }
+  ```
+
+* Accepted
+
+  HTTP 422
+
+  ```json
+  {
+    "message": "ACCEPTED"
+  }
+  ```
+
+* Rejected
+
+  HTTP 422
+
+  ```json
+  {
+    "message": "REJECTED"
+  }
+  ```
+
+* No Login
+
+  HTTP 401
+
+  ```json
+  {
+    "message": "NOT_LOGINED_YET"
+  }
+  ```
+
+* Permission Denied
+
+  HTTP 401
+
+  ```json
+  {
+    "message": "PERMISSION_DENIED"
+  }
+  ```
+
+* Database Error
+
+  HTTP 500
+
+  ```json
+  {
+    "message": "DATABASE_ERROR"
   }
   ```
 
 ### Reject
 
-**PATCH** /tch/:uid/book/:id/reject
+**PATCH** /tch/:uid/reserve/:id/reject
 
 #### Response
 
@@ -641,13 +904,63 @@
   }
   ```
 
-* Invalid id
+* Invalid Field
 
   HTTP 422
 
   ```json
   {
-    "message": "INVALID_ID"
+    "message": "INVALID_FIELD"
+  }
+  ```
+
+* Accepted
+
+  HTTP 422
+
+  ```json
+  {
+    "message": "ACCEPTED"
+  }
+  ```
+
+* Rejected
+
+  HTTP 422
+
+  ```json
+  {
+    "message": "REJECTED"
+  }
+  ```
+
+* No Login
+
+  HTTP 401
+
+  ```json
+  {
+    "message": "NOT_LOGINED_YET"
+  }
+  ```
+
+* Permission Denied
+
+  HTTP 401
+
+  ```json
+  {
+    "message": "PERMISSION_DENIED"
+  }
+  ```
+
+* Database Error
+
+  HTTP 500
+
+  ```json
+  {
+    "message": "DATABASE_ERROR"
   }
   ```
 
@@ -671,13 +984,13 @@
   }
   ```
 
-* Invalid id
+* Invalid Field
 
   HTTP 422
 
   ```json
   {
-    "message": "INVALID_ID"
+    "message": "INVALID_FIELD"
   }
   ```
 
@@ -688,5 +1001,45 @@
   ```json
   {
     "message": "UNACCEPTABLE_OPERATION"
+  }
+  ```
+
+* No Login
+
+  HTTP 401
+
+  ```json
+  {
+    "message": "NOT_LOGINED_YET"
+  }
+  ```
+
+* Permission Denied
+
+  HTTP 401
+
+  ```json
+  {
+    "message": "PERMISSION_DENIED"
+  }
+  ```
+
+* Database Error
+
+  HTTP 500
+
+  ```json
+  {
+    "message": "DATABASE_ERROR"
+  }
+  ```
+
+* Out of Range
+
+  HTTP 422
+
+  ```json
+  {
+    "message": "OUT_OF_RANGE"
   }
   ```

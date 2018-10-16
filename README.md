@@ -38,7 +38,7 @@
 ## 技术细节
 
 * 后端框架：Express(Node.js)
-* 前端框架：Vue(暂定)
+* 前端框架：Vue
 * 数据库：MongoDB
 * 缓存器：Redis
 * 部署：Docker

@@ -149,8 +149,11 @@ router.post('/logout', function (req, res) {
     return;
   }
 
+  let send_data = {
+    "message": "OK"
+  };
   logger.logger("/tch/logout", req);
-  res.sendStatus(200);
+  res.status(200).jsonp(send_data);
 });
 
 /**
@@ -188,11 +191,11 @@ router.get('/:uid/:week', async function (req, res) {
 
 /**
  ** QueryList router
- ** GET /:uid/book/list
+ ** GET /:uid/reserve/list
  **
  */
 
-router.get('/:uid/book/list', async function (req, res) {
+router.get('/:uid/reserve/list', async function (req, res) {
   let uid = parseInt(req.params['uid']),
       session_user = req.session.uid;
 
@@ -433,16 +436,6 @@ router.post('/:uid/:week/:day/arrange', async function (req, res) {
 
     if (err.message === message.not_permitted) {
       res.status(401).jsonp(err_message);
-      return;
-    }
-
-    if (err.message === message.accepted) {
-      res.status(422).jsonp(err_message);
-      return;
-    }
-
-    if (err.message === message.rejected) {
-      res.status(422).jsonp(err_message);
       return;
     }
 
