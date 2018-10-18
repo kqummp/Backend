@@ -892,6 +892,10 @@
 
 **PATCH** /tch/:uid/reserve/:id/reject
 
+#### Request
+
+* **reject_reason** string
+
 #### Response
 
 * Success
@@ -931,6 +935,66 @@
   ```json
   {
     "message": "REJECTED"
+  }
+  ```
+
+* No Login
+
+  HTTP 401
+
+  ```json
+  {
+    "message": "NOT_LOGINED_YET"
+  }
+  ```
+
+* Permission Denied
+
+  HTTP 401
+
+  ```json
+  {
+    "message": "PERMISSION_DENIED"
+  }
+  ```
+
+* Database Error
+
+  HTTP 500
+
+  ```json
+  {
+    "message": "DATABASE_ERROR"
+  }
+  ```
+
+### Cancel
+
+**PATCH** /tch/:uid/reserve/:id/cancel
+
+#### Request
+
+* **cancel_reason** string
+
+#### Response
+
+* Success
+
+  HTTP 204
+
+  ```json
+  {
+    "message": "OK"
+  }
+  ```
+
+* Invalid Field
+
+  HTTP 422
+
+  ```json
+  {
+    "message": "INVALID_FIELD"
   }
   ```
 
