@@ -314,7 +314,11 @@ router.patch('/:uid/reserve/:id/accept', async function (req, res) {
 
   logger.logger("/tch/" + uid + "/reserve/" + reserve_id + "/accept", req);
 
-  res.status(200).jsonp(succ_message);
+  let send_data = {
+    "message": "OK"
+  };
+
+  res.status(200).jsonp(send_data);
 });
 
 /**
@@ -375,7 +379,72 @@ router.patch('/:uid/reserve/:id/reject', async function (req, res) {
 
   logger.logger("/tch/" + uid + "/reserve/" + reserve_id + "/reject", req);
 
-  res.status(200).jsonp(succ_message);
+  let send_data = {
+    "message": "OK"
+  };
+
+  res.status(200).jsonp(send_data);
+});
+
+
+/**
+ ** Cancel router
+ ** PATCH /:uid/reserve/:id/cancel
+ ** Request reject_reason
+ **
+ */
+
+router.patch('/:uid/reserve/:id/cancel', async function (req, res) {
+  let uid = parseInt(req.params['uid']),
+      reserve_id = req.params['id'],
+      cancel_reason = req.body.cancel_reason,
+      session_user = req.session.uid;
+
+  let succ_message;
+  try {
+    succ_message = await tchmgr.Cancel(reserve_id, cancel_reason, session_user, uid);
+  } catch (err) {
+    logger.logger("/tch/" + uid + "/reserve/" + reserve_id + "/cancel", req, err);
+
+    let err_message = {
+      "message": err.message
+    };
+    if (err.message === message.invalid_field) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.no_login) {
+      res.status(401).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.not_permitted) {
+      res.status(401).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.canceled) {
+      res.status(422).jsonp(err_message);
+      return;
+    }
+
+    if (err.message === message.database_error) {
+      res.status(500).jsonp(err_message);
+      return;
+    }
+
+    res.status(400).jsonp(err_message);
+    return;
+  }
+
+  logger.logger("/tch/" + uid + "/reserve/" + reserve_id + "/cancel", req);
+
+  let send_data = {
+    "message": "OK"
+  };
+
+  res.status(200).jsonp(send_data);
 });
 
 /**
@@ -442,7 +511,11 @@ router.post('/:uid/:week/:day/arrange', async function (req, res) {
 
   logger.logger("/tch/" + uid + "/" + week + "/" + day + "/arrange", req);
 
-  res.status(200).jsonp(succ_message);
+  let send_data = {
+    "message": "OK"
+  };
+
+  res.status(200).jsonp(send_data);
 });
 
 module.exports = router;
